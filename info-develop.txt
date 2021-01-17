@@ -1,0 +1,13 @@
+azure cli
+https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
+
+az login
+az storage account list
+
+---------
+Powershell
+Set-ExecutionPolicy RemoteSigned 
+Install-Module -Name Az -AllowClobber -Scope CurrentUser
+Import-Module Az -Verbose 
+
+Connect-AzAccount
