@@ -11,3 +11,149 @@ Install-Module -Name Az -AllowClobber -Scope CurrentUser
 Import-Module Az -Verbose 
 
 Connect-AzAccount
+
+------
+Create vm
+Subscription
+   - Resource group
+
+instance details
+ Virtual machine name
+ Region
+ Availability options
+ Image
+ Azure Spot instance
+ Size
+
+administrator account
+ username
+ password
+ confirm password
+
+inbound port rules
+ public inbound ports
+ select inbound ports RDP(3389)
+
+Disk,
+Networking,
+
+So a subnet is again a logical separation of the address space of the virtual Network.
+Then we have a public IP address, so the public IP address allows this virtual machine to be reachable 
+from the Internet.
+So let's say that you want to go ahead and connect to this virtual machine. will actually connect to this virtual
+machine via the public IP address
+
+Monitoring
+ Boot diagnostics - on
+ Diagnostic storage account - 
+
+Advanced
+Tags
+Review - create
+
+--
+view all resources
+=======
+Connect RDP
+ - Download RDP File
+
+---
+In vm
+Server Manger - dashboard
+ Add roles and features
+    installation type: role-based or feature-based installation
+    server selection: select a server from the server pool
+    server roles: web server(iis)
+       next , install
+
+localhost
+
+---
+ip public don´t working, for network security group
+go onto the Networking sections
+  add inbound security rule
+      destination port ranges: 80
+      protocol TCP
+
+ip public refresh
+============
+Publishing an application from Visual Studio to a VM
+vs:
+publish
+ azure virtual machines
+
+azure portal:
+ dns name - configure
+
+configuration
+ assigment: static
+ DNS name label (demovm)
+
+networking
+ add inbound security rule
+ port 8172
+ TCP
+
+vm:
+Add roles and Features Wizard
+  Web Server ISS
+    Application Development
+       ASP NET 4.7 - check
+  Mangement tools
+    ISS Management Tools
+       Management Service - check
+install
+
+tools
+ iis manager
+   vm(demovm)
+     management service
+       enable remote connections  
+     -apply
+     -start
+
+local server
+  IE Enhanced Security Configuration: OFF
+
+search in internet explorer
+  Download Web Deploy v3.5
+
+go again to vs
+publish
+ azure virtual machines - browse - select vm in azure portal
+ edit - validate connection
+ publish
+
+Overview:
+  1. Assign static IP and DNS name to Virtual Machine
+  2. Open Port 8172 in Network Security Groups
+  3. In Web Server Roles add
+              Management Service and ASP.Net 4.7
+  4. Install Web Deploy v 3.5
+ 
+================================
+Create linux vm 
+port 22
+
+connect with Putty
+// This command is used to update the package index
+sudo apt-get update
+
+// This command will install the nginx web server
+sudo apt-get install nginx
+
+vm:
+  Add inbound port rule
+     Source: Service Tag
+     Destination port range: 80
+     Protocol: TCP
+
+test ip public
+-----
+Accelerated networking
+ Accelerated networking enables single root I/O virtualization (SR-IOV) to a VM, greatly improving its networking performance. This high-performance path bypasses the host from the data path, which reduces latency, jitter, 
+ and CPU utilization for the most demanding network workloads on supported VM types. The following diagram illustrates how two VMs communicate with and without accelerated networking:
+https://docs.microsoft.com/en-us/azure/virtual-network/create-vm-accelerated-networking-powershell
+
+=======================
+Generalizing a Virtual Machine  -generate image
