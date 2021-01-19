@@ -156,4 +156,89 @@ Accelerated networking
 https://docs.microsoft.com/en-us/azure/virtual-network/create-vm-accelerated-networking-powershell
 
 =======================
-Generalizing a Virtual Machine  -generate image
+Generalizing a Virtual Machine  -generate image of vm
+
+Access to vm windows:
+System32/Sysprep
+   check Generalize
+   Shutdown Options: Shutdown 
+
+cloud shell
+  deallocated - stop vm
+  Stop-AzVM -ResourceGroupName azuredemo -Name demovm -Force
+
+Azure Portal
+  vm - overview
+  option Capture
+    create
+
+Images
+Select image - Create new vm
+   open port 80 http
+   boot diagnostics off
+
+test ip public
+================================================
+Azure Resource Manager Template
+This provides the obility to define your infrastructure as code
+You create templates using JSON
+This defines this infrastructure and configuration of the resources that need to be deployed
+
+ej: create vm, storage account, virtual network
+
+Resources: resources that need to be deployed
+Variable: values that can be reused in the template
+Parameters: can be used to provide values during the deployment phase
+Outputs: values from the deployed serources
+
+Azure portal
+Template deployment - create
+  Deploy a simple windows VM
+     edit - to view json
+
+-------------------------
+Azure backup for vm
+  use: Recovery Service vault     [Recovery Point]
+       Backup Policy              [File Recovery, VM Recovery, Disk Recovery]
+ 
+in vm
+operations
+ backup 
+  create o edit a new policy
+      backup policy
+    enable backup
+ 
+ backup now
+
+Recovery Services Vault
+  Backup items
+
+
+But remember, this is pointing to our restore point.
+It's not pointing to our virtual machine.
+Just keep this in mind. so you can actually now go onto the drives and you can start recovering the files on a file by file basis.
+
+
+===============================
+Docker 
+test in vm linux
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+sudo apt update
+sudo apt install docker-ce
+
+sudo docker pull nginx:1.17.0
+sudo docker images
+
+sudo docker run --name sampleapp -p 80:80 -d nginx:1.17.0
+
+
+add rule port 80 in vm
+
+test ip public
+------
+deploy .net core in vm linux
+can use linux with Nginx
+        linux with Apache
