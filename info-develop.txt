@@ -242,3 +242,214 @@ test ip public
 deploy .net core in vm linux
 can use linux with Nginx
         linux with Apache
+
+sudo apt-get update
+sudo apt-get install nginx
+
+azure portal:
+ add port 80
+
+
+wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+
+sudo dpkg -i packages-microsoft-prod.deb
+
+sudo apt-get update
+
+sudo apt-get install dotnet-sdk-3.1
+
+
+*Use WinSCP to transfer files - folder publish 
+
+donet coreproj.dll
+
+cd /etc/nginx/sites-available
+sudo chmod 667
+
+nano default
+location / {
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		proxy_pass http://localhost:5000;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection keep-alive;
+		proxy_set_header Host $host;
+		proxy_cache_bypass $http_upgrade;	
+	}
+
+sudo nginx -s reload
+
+*cd var/www
+*sudo chmod 667 html
+*copy files publish\wwwroot\(css,js,lib,favicon.ico)  to nginx var/www/html
+
+------
+Containerizing
+
+Dockerfile:
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1
+WORKDIR /app
+COPY  . .
+ENV ASPNETCORE_URLS http://*:5000
+EXPOSE 5000
+ENTRYPOINT ["dotnet", "coreproj.dll"]
+
+
+sudo docker build -t dotnetapp .
+sudo docker run -d -p 5000:5000 dotnetapp
+
+test ip public
+------
+ACR - Azure Container Registry
+Azure Portal:
+  Create Container Resgistry
+
+vm linux:
+
+curl -sL https://packages.microsoft.com/keys/microsoft.asc | \
+    gpg --dearmor | \
+    sudo tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
+
+AZ_REPO=$(lsb_release -cs)
+echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
+    sudo tee /etc/apt/sources.list.d/azure-cli.list
+
+sudo apt-get update
+
+sudo apt-get install azure-cli
+
+sudo az login
+
+sudo az acr login --name appregistry2020
+
+sudo docker tag dotnetapp appregistry2020.azurecr.io/dotnetapp
+
+sudo docker push appregistry2020.azurecr.io/dotnetapp
+
+
+
+-----
+Azure Container Instances
+Use Azure Container registry
+
+port 5000
+test ip public
+
+----------------
+---------------
+Kubernetes
+This is an open-source platform that is used to magning containerized workloads
+Kubernetes is able to provide a DNS name to your containe
+
+
+create cluster
+you can use the interface or commands
+
+cloud shell, powershell
+// Here we will create a new resource group
+az group create --name kubernetesgrp --location eastus
+
+// Then we will create a new Kubernetes cluster
+az aks create --resource-group kubernetesgrp --name democluster --node-count 1 --enable-addons monitoring --generate-ssh-keys
+
+// We will then install the kubectl tool
+az aks install-cli --install-location=./kubectl
+
+// This allows kubectl to connect to the Kubernetes cluster
+az aks get-credentials --resource-group kubernetesgrp --name democluster 
+
+-------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-app
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.17.0
+        ports:
+        - containerPort: 80
+----
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: nginx-app
+
+kubectl apply -f app.yml
+
+kubectl apply -f service.yml
+
+kubectl get service nginx-service --watch
+
+kubectl delete services nginx-service
+
+---------------------
+ACR - AKS
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-image
+        image: appregistry6000.azurecr.io/dotnetapp
+        ports:
+        - containerPort: 5000
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5000
+  selector:
+    app: my-app
+
+kubectl delete services nginx-service
+
+kubectl delete deployment nginx-deployment
+
+$AKS_RESOURCE_GROUP="kubernetesgrp"
+$AKS_CLUSTER_NAME="democluster"
+$ACR_RESOURCE_GROUP="demogrp1"
+$ACR_NAME="appregistry6000"
+
+//Use Service Principal
+$CLIENT_ID=$(az aks show --resource-group $AKS_RESOURCE_GROUP --name $AKS_CLUSTER_NAME --query "servicePrincipalProfile.clientId" --output tsv)
+
+$ACR_ID=$(az acr show --name $ACR_NAME --resource-group $ACR_RESOURCE_GROUP --query "id" --output tsv)
+
+az role assignment create --assignee $CLIENT_ID --role acrpull --scope $ACR_ID
+
+kubectl apply -f app.yml
+
+kubectl apply -f service.yml
+
+kubectl get service my-service --watch
