@@ -453,3 +453,63 @@ kubectl apply -f app.yml
 kubectl apply -f service.yml
 
 kubectl get service my-service --watch
+
+=============================================
+=============================================
+
+Azure App Service (Saas)
+
+App Service Plan
+Free 60min per day
+Shared 240 per day
+https://docs.microsoft.com/en-us/azure/app-service/overview-hosting-plans
+Pricing tier (Free, Shared, Basic, Standard, Premium, PremiumV2, PremiumV3, Isolated)
+
+---
+Azure Portal 
+Create Web App 
+  Runtime Stack: ASP NET V4.7
+  SO: Windows
+ 
+ App Service Plan: Basic B1
+ Enable Application Insights -no
+
+VS:
+ Publish
+   App Service: Select existing
+--------------
+--------------
+Azure Web App - Linux
+   Runtime Stack: .net Core 3.1(LTS)
+    SO: Windows
+
+ App Service Plan: Standard1
+  
+
+VS:
+ Publish
+   App Service: Select existing
+
+-------------
+-------------
+App Service
+  Overview - Stop, Restart
+
+Configuration
+  Application Settings
+  Connection Strings
+
+Authentication/Authorization
+   App Service Authentication - on
+      AD
+   Backup
+
+   Scale up(App Service plan)
+   Scale out(App Service plan)
+
+   Networking
+      VNet integration
+      Hybrid connections
+      Azure front door with web application firewall
+      Azure CDN
+
