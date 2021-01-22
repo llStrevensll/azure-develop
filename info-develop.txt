@@ -513,3 +513,61 @@ Authentication/Authorization
       Azure front door with web application firewall
       Azure CDN
 
+---------
+Web App - Docker container
+Create web app
+  Publish: Docker Container
+  linux
+  acr
+
+----
+App services logs
+  Application logging
+  Web server logging
+  Detailed Error messages
+  failed request tracing
+  deployment logging
+
+#note: use project- mvcapp
+vs
+publish project un app service
+
+Monitoring
+  App service logs
+  level information
+  webserverloggin: file system
+
+
+azure poral -app service
+deployment center 
+  FTP - User Credentials
+       username, pw
+
+use WinSCP
+  see logs
+
+-------------------------
+web app - publish from github
+Github Extension for Visual Studio
+login to github in vs
+
+Add solution to source control
+commit
+commit stage
+sync
+publish to github
+
+app service
+ deployment center
+   github 
+     github actions
+
+vs
+other commit
+push
+
+refresh page
+
+az appservice plan create --name "demoappplan2020" --resource-group "azuredemo" --sku Free
+az webapp create --name "demoapp2050" --resource-group "azuredemo" --plan "demoappplan2020"
+az webapp deployment source config --name "demoapp2050" --resource-group "azuredemo" --repo-url "https://github.com/alashro/WebAppNew" --branch master --manual-integration
