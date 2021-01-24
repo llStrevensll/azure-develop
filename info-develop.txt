@@ -571,3 +571,105 @@ refresh page
 az appservice plan create --name "demoappplan2020" --resource-group "azuredemo" --sku Free
 az webapp create --name "demoapp2050" --resource-group "azuredemo" --plan "demoappplan2020"
 az webapp deployment source config --name "demoapp2050" --resource-group "azuredemo" --repo-url "https://github.com/alashro/WebAppNew" --branch master --manual-integration
+
+
+-------------
+azure cli
+azure cloud shell
+$gitrepo="https://github.com/alashro/demoapp1000"
+az group create --location centralus --name staging-grp
+az appservice plan create --name newappplan2000 --resource-group staging-grp --sku B1
+
+az webapp create --name newapp2000 --resource-group staging-grp --plan newappplan2000 
+az webapp deployment source config --name newapp2000 --resource-group staging-grp --repo-url $gitrepo --branch master --manual-integration
+
+-------
+Custom Domains
+//godaddy
+edit in provider domain (example:godaddy)
+app service
+Custom Domains
+  copy IP address
+  
+  add custom domains
+-------
+SSL
+TLS/SSL Settings
+   Create App
+   Service Managed Cerificate
+Custom Domains
+   Add binding
+      choose certificate
+      TLS/SSL: SNI SSL
+-------
+CORS: Cross-Origin Resource Sharing
+Publish project webapi vs
+Publish
+  new - select existing
+  publish
+
+project consumer api
+consume.html - ajax
+Publish
+  new - select existing
+  publish
+
+app service -webapi
+  CORS
+    enable
+    allow origin: consumeapi.azurewebsite.net
+-------
+deployment slots
+publish vs
+scale up - production s1
+deployment slots - add slot
+swap
+
+------
+deployment slots power shell
+//create variables that can be used in the PowerShell script. Here we are setting the location for the web application, 
+the name of a new resource group and the name of the new Azure Web App
+$location="Central US"
+$resourcegrp="newgrp"
+$webappname="demoapp4040"
+
+// Next we issue the command to create a new resource group
+New-AzResourceGroup -Name $resourcegrp -Location $location
+
+// Next we issue the command to create a new App Service Plan
+New-AzAppServicePlan -Name $webappname -Location $location -ResourceGroupName $resourcegrp -Tier Standard
+
+// Next we issue the command to create a new Web App
+New-AzWebApp -Name $webappname -Location $location -ResourceGroupName $resourcegrp -AppServicePlan $webappname
+
+// Next we issue the command to create a new Web App deployment slot
+New-AzWebAppSlot -Name $webappname -ResourceGroupName $resourcegrp -Slot "staging"
+
+-----------------------
+----------------------
+.NetCore azure web app linux
+cloud shell 
+az group create -name linuxgroup --location "West Europe"
+az appservice plan create --name demoplan --resource-group linuxgroup --sku B1 -ls-linux
+az webapp create --resource-group linuxgroup --plan demoplan --name linuxapp2020 -- "DOTNETCORE|2.2" --deployment-local-git
+
+
+https://dotnet.microsoft.com/download
+cmd local
+donet --version
+mkdir coreapp
+cd coreapp
+dotnet new web
+dotnet run
+
+git add .
+git commit -m ""
+
+cloud shell
+az webapp deployment user set --user-name demousr2020 --password DemoUsr@2020
+
+git remote add azure https://demousr2020@linuxapp2020.scm.azurewebsites.net/linuxapp2020.git
+git push azure master
+
+
+
