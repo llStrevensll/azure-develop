@@ -795,3 +795,34 @@ create Durable Functions Orchestrator
 
 create Durable Functions activity
 
+
+get url function starter
+postman post - url  {functionName}=Orchestrator
+
+answer
+uri's - select first
+=Orchestrator has gone ahead ans run that activity function three times
+
+-----------
+VSCode Azure Functions
+Extension: Azure Functions, Azure Account, C#
+view - Command Palette
+          Azure: Sign In
+create azure functions
+
+Run - Start Debugging
+
+localhost:7071/api/visual_studio_code?name=Angel
+
+Deploy to Function App
+  Subscriptions
+    select or create function app
+-------------
+VS Azure Function 
+Create a new project
+   Azure Functions
+      Http Trigger
+
+run
+localhost:7071/api/Function1?name=Angel
+
