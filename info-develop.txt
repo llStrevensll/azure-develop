@@ -826,3 +826,5 @@ Create a new project
 run
 localhost:7071/api/Function1?name=Angel
 
+=====================
+Storage Account
