@@ -826,5 +826,72 @@ Create a new project
 run
 localhost:7071/api/Function1?name=Angel
 
-=====================
+===================================
 Storage Account
+Service:
+blob, table, file, queue
+Blob: store massive amounts of unstructured data on the cloud
+      image, documents,video and audio files
+  Block blobs - storing text and binaty data
+  Append blobs - ideal logging data
+  Page blobs - used to store virtual hard disk files for AZ vm
+
+Azure Storage Account - Replication
+Locally-redundant-storage(LRS)
+Zone-redundant storage (ZRS)
+Geo-redundant storage (GRS)
+Read access Geo-redundant storage(RA-GRS)
+
+hot
+cold
+------
+create storage account
+subs
+  resouce group
+name
+location
+performance - standard
+account kind - storagev2
+replication: locally-redundant storage (LRS)
+access tier: hot
+
+advanced:
+#blob public access - enabled   // to production in disabled
+
+--------
+Container
+all blob is part a container
+create new container in storage account
+  
+  upload file
+  copy url - //test (resource not found)
+  Change access level: Blob(anonymous read access for blobs only)
+  //test again url
+
+--------
+Storage Explorer
+install tool Azure Storage Explorer
+manage account - add an azure account
+   apply
+--------
+Access Keys
+2 keys
+tool storage explorer:
+   Use a storage account  name and key
+            Display name
+            Account name
+            Account key
+--------
+Storage Account - Azure cli
+az login
+az storage account create --name stagingstore4000 --resource-group demogrp1 --location EastUS --sku Standard_LRS 
+az storage container create --account-name stagingstore4000 --name demo
+
+//local directory have a file - sample.txt 
+az storage blob upload --account-name stagingstore4000 --container-name demo --name sample.txt --file sample.txt
+
+az storage container set-permission --account-name stagingstore4000 --name demo --public-access blob
+az storage blob list --account-name stagingstore4000 --container-name demo --output table
+az storage blob download --account-name stagingstore4000 --container-name demo --name sample.txt --file sample.txt
+--------
+
