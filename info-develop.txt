@@ -895,3 +895,337 @@ az storage blob list --account-name stagingstore4000 --container-name demo --out
 az storage blob download --account-name stagingstore4000 --container-name demo --name sample.txt --file sample.txt
 --------
 
+AzCopy tool
+https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10
+
+//tenant-id in azure directory
+azcopy login --tenant-id=5f5f1c90-abac-4ebe-88d7-0f3d121f967e
+
+//create container in storage account
+azcopy make "https://stagingstore4000.blob.core.windows.net/demo"
+
+
+Access control(IAM)
+  add
+    role: Storage Blob Data Contributor
+    select: user
+
+//Copy
+azcopy copy "sample.txt" "https://stagingstore4000.blob.core.windows.net/demo/sample.txt"
+//Download
+azcopy copy "https://stagingstore4000.blob.core.windows.net/demo/sample.txt" "sample.txt"
+
+------
+https://docs.microsoft.com/en-us/dotnet/api/overview/azure/storage?view=azure-dotnet
+vs - azure blob storage - v12
+Tools
+  NuGet Package Manager
+       Manage Nuget Packages for Solution
+
+azure portal
+  storagea account - acess key
+        - connection string
+
+
+1) BlobServiceClient Class - This is used as a logical representation of the Azure Storage account and provdies access to work with the Blob service.
+You can use the Constructor of the BlobServiceClient class to pass in the connection string to connect to the Azure Storage account.
+You then have methods such as
+
+a) CreateBlobContainer and CreateBlobContainerAsync- This can be used to create a container
+b) GetBlobContainerClient - This returns a reference to an existing container
+
+
+2) BlobContainerClient - This is used as a logical representation of the container service in the Azure Storage account
+You then have methods such as
+
+a) GetBlobClient - This is used to get a logical representation to a blob
+b) GetBlobsAsync - This is used to return a list of blobs in a container. Each blob is returned as an object of the class BlobItem
+
+3) BlobClient - This class is used to work with Azure Storage Blobs
+You then have methods such as
+
+a) Upload and UploadAsync - This can be used to upload a blob onto the container
+b) Download and DownloadAsync - This can be used to download a blob from the container
+
+4) BlobItem - This class is used to represent a Blob in a container.
+
+For the BlobItem class , you have properties such as Metadata, Name , Properties and Snapshot
+------
+vs - azure blob storage - v11
+Tools
+  NuGet Package Manager
+       Manage Nuget Pavkages for Solution
+------
+Azure blob properties and metadata
+select file in azure portal (sample.txt)
+Tier - hot
+lenght
+key          - value
+deparment   - IT
+
+
+vs blobproperties
+run GetMetadata()
+SetMetadata()
+-------
+Shared Access Signatures
+private access
+select file
+  Generate SAS
+    Permissions - READ
+    Start and expiry date/time
+    Generate SAS token and URL
+
+storage account
+   shared access signature
+    Generate SAS and connection string
+
+--------
+Shared Access Signature - Net
+generate sas
+---------
+Access Tiers
+Storage Account
+  Configuration - Access tier(default)
+select file
+  change tier - cold, 
+         Archive - blob that are not accessed for a long duration of time
+
+----------
+Blob snapshots
+select file
+  Edit file
+  View snapshot
+     Promote snapshot - go back previous version
+----------
+Blob lease
+Establish a lock on the blob for write and delete operations
+
+select file
+   Acquire lease
+----------
+Storage Account - Soft Delete
+Data Protection
+  Blob soft delete: Enabled
+  Retention polices: period 7 days
+
+select file
+   Create 2 Snapshot 
+delete file -  check also delete blob snapshots
+
+container
+  show deleted blobs
+      undeleted
+----------
+ARM Templates Storage Accounts
+Azure Portal
+Template deployment
+  Build your own template in the editor
+     //Create storage account multiple times
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageCount": {
+            "type": "int",
+            "defaultValue": 2
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-04-01",
+            "name": "[concat(copyIndex(),'storage80808')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "StorageV2",
+            "properties": {},
+            "copy": {
+                "name": "storagecopy",
+                "count": "[parameters('storageCount')]"
+            }
+        }
+    ],
+    "outputs": {}
+}
+
+   Save
+     resource group
+--------
+https://docs.microsoft.com/en-us/azure/storage/common/redundancy-migration?tabs=portal
+1) Upgrading a storage account
+
+If you have a Blob only storage account or a general purpose v1 storage account, you can easily migrate to a General Purpose v2 storage account. The general purpose v2 storage account provides lowest per-gigabyte capacity prices for Azure Storage and has much more features
+If you do have such an account, you can just go to the configuration and click on Upgrade
+       
+2) Changing the replication type for a storage account
+
+If you need to migrate your storage account from Locally redundant storage or Geo-redundant storage  to Zone redundant storage in the primary region with no application downtime, you can request a live migration from Microsoft. During a live migration, you can access data in your storage account, and with no loss of durability or availability. The Azure Storage SLA is maintained during the migration process. There is no data loss associated with a live migration. Service endpoints, access keys, shared access signatures, and other account options remain unchanged after the migration.
+====================
+====================
+Azure Table Storage
+Used to store NoSQL Data
+ key/attribute
+
+table
+ entity [set properties]  name-value pair
+   partition key, row key and timestamp
+
+----
+storage account
+table
+  add
+
+storage explorer
+  add entity
+    
+shared access signature
+  check only table
+    generate SAS and connection string
+
+test postman url - GET
+add in url Customer
+windows-/Customer(PartitionKey=Architect.RowkEY='userA')?sv=
+---
+Partition and Row key
+Partition Key - These are string values. These define the partition the entity is stored in.
+Row Key - These are string values. These are used to uniquely identity entities within each partition
+TimeStamp - Tells the last time the entity was modified.
+The Table Primary Key is the combination of the Partition and Row Key
+-----
+vs .net yable storage
+vs - azure cosmos table - v1.0.7
+Tools
+  NuGet Package Manager
+       Manage Nuget Packages for Solution
+
+Storage Account - key: connection string
+-------
+Queue Storage
+add queue
+  add message to queue
+------
+Queue Storage - VS  - 11.1.5
+azure portal
+name=appqueue - storage account
+copy key - connection string
+vs
+Tools
+  NuGet Package Manager
+       Manage Nuget Packages for Solution
+           install: Microsoft.Azure.Storage.Queue
+
+//use FetchAttributes(); before to get
+
+project: send, receive
+
+============
+Azure Functions - Queue binding
+
+add
+  Azure Queue Storage Trigger
+      newfunction(name): queue-trigger 
+      Queue name: appqueue
+      Storage account connection: <select storageaccount>
+
+code+test
+
+//JObject: json object
+
+
+#r "Newtonsoft.Json"
+
+
+using System;
+using Newtonsoft.Json.Linq;
+
+public static void Run(JObject myQueueItem, ILogger log)
+{
+       Course coursebj=myQueueItem.ToObject<Course>();
+
+       log.LogInformation((coursebj.Id).ToString());
+       log.LogInformation(coursebj.Name);
+       log.LogInformation((coursebj.rating).ToString());
+
+}
+
+public class Course
+{
+    public int Id;
+    public string Name;
+    public double rating;
+}
+
+
+add message in queue
+{ "Id" : 1, "Name" : "AZ-204", "rating" : 4.5 }
+
+queue-trigger go on to the monitor section
+-----------------
+Azure Functions - Queue and Table binding
+create table
+  name: customer
+
+code-test
+#r "Newtonsoft.Json"
+
+
+using System;
+using Newtonsoft.Json.Linq;
+
+public static Course Run(JObject myQueueItem, ILogger log)
+{
+       Course courseobj= new Course();
+       courseobj.PartitionKey=myQueueItem["Id"].ToString();
+       courseobj.RowKey=myQueueItem["Name"].ToString();
+       courseobj.rating=myQueueItem["rating"].Value<double>();
+        return courseobj;
+}
+
+public class Course
+{
+    public string PartitionKey {get;set;}
+    public string RowKey {get;set;}
+    public double rating {get;set;}
+}
+
+
+function .json:
+{
+  "bindings": [
+    {
+      "direction": "in",
+      "type": "queueTrigger",
+      "connection": "demotore4000_STORAGE",
+      "name": "queueitem",
+      "queueName": "appqueue"
+    },
+    {
+      "type": "table",
+      "name": "$return",
+      "tableName": "customer",
+      "connection": "demotore4000_STORAGE",
+      "direction": "out"
+    }
+  ],
+  "disabled": false
+}
+
+add message in queue
+{ "Id" : 1, "Name" : "AZ-204", "rating" : 4.5 }
+refresh and see the table
+------------
+Azure Functions - Multiple Output bindings
+
+output table,queue, blob
+table: newCustomer
+queue: appqueue
+
+local.settings.json - connection
+
+use program to send messagees to queue
+=========================
+Azure SQL Database
+
