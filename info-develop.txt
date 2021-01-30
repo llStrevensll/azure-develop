@@ -1228,4 +1228,4 @@ local.settings.json - connection
 use program to send messagees to queue
 =========================
 Azure SQL Database
-
+IaaS   -  PaaS  -  [Elastic Pool, Single Database, Managed Instance]
