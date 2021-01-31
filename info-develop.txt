@@ -871,6 +871,7 @@ create new container in storage account
 --------
 Storage Explorer
 install tool Azure Storage Explorer
+https://azure.microsoft.com/es-es/features/storage-explorer/
 manage account - add an azure account
    apply
 --------
@@ -1228,4 +1229,103 @@ local.settings.json - connection
 use program to send messagees to queue
 =========================
 Azure SQL Database
-IaaS   -  PaaS  -  [Elastic Pool, Single Database, Managed Instance]
+IaaS   -        PaaS  -  [Elastic Pool, Single Database, Managed Instance]
+ip private      firewall
+                 purchasing model [DTU Database Transaction Unit, vCore-based]
+
+sql database
+resource
+database name
+server
+  create new
+compute + storage
+  configure database
+      basic
+
+connectivity method
+  public endpoint
+firewall rules
+   Add current IP address - Yes
+-----
+copy sever name
+Download SQL Server Management Studio (SSMS)
+https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15
+
+use server name
+  user
+  pass
+------
+azure web app - azure sql database - vs
+
+azure portal:
+show connection string db 
+    - replace password
+
+vs:
+page connecion string in webconfig 
+<connectionStrings>
+    <add name="CourseContext" providerName="System.Data.SqlClient" connectionString="" />
+  </connectionStrings>
+
+
+sql server:
+insert into Courses(name,rating) values('AZ-104',4.4)
+insert into Courses(name,rating) values('AZ-300',4.5)
+insert into Courses(name,rating) values('AZ-301',4.6)
+
+vs - run
+localhost
+
+azure portal:
+set server firewall
+ cliente ip address
+
+vs
+publish app service
+create new registre
+
+select * from Courses - view data
+-------
+azure web app - connetion string
+vs
+<connectionStrings>
+    <add name="connstring" connectionString="Server=tcp:demoserver4000.database.windows.net,1433;Initial Catalog=appdb;Persist Security Info=False;User ID=demousr;Password=123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" providerName="System.Data.SqlClient"/>
+  </connectionStrings>
+
+azure portal - app service
+configuration
+ add connection string
+   value:  Server=tcp:demoserver4000.database.windows.net,1433;Initial Catalog=appdb;Persist Security Info=False;User ID=demousr;Password=123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" providerName="System.Data.SqlClient
+   type: SQLAzure
+   name: connstring	
+
+
+vs -Model
+ database.cs
+    connstring = ConfigurationManager.ConnectionStrings["connstring"].ConnectionString;
+
+publish app service
+
+
+--------
+AzureFunction - Azure SQL Database
+azure portal - sql database
+                 query editor: select * from[dbo].[Products]
+vs - azurefunction - httptrigger
+Function1.cs
+  //string _conn_string = "Server=tcp:demoserver4000.database.windows.net,1433;Initial Catalog=demodb;Persist Security Info=False;User ID=demousr;Password=123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+    string _conn_string = Environment.GetEnvironmentVariable("sql_connection");
+
+run localhost
+
+publish azure function
+
+azure portal - function app
+configuration
+  new application settings
+     Name:sql_connection
+     Value: Server=tcp:demoserver4000.database.windows.net,1433;Initial Catalog=demodb;Persist Security Info=False;User ID=demousr;Password=123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+
+fucntion
+  get function url
+  test in browser
