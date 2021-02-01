@@ -1326,6 +1326,108 @@ configuration
      Name:sql_connection
      Value: Server=tcp:demoserver4000.database.windows.net,1433;Initial Catalog=demodb;Persist Security Info=False;User ID=demousr;Password=123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
 
-fucntion
+function
   get function url
   test in browser
+---------
+Azure Container Intances - Container Groups
+//you can deploy multiple containers as part of a container
+deployment yaml
+
+apiVersion: 2020-10-01
+location: eastus
+name: container
+properties:
+  containers:
+  - name: nginx-demo
+    properties:
+      image: nginx
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+      ports:
+      - port: 80
+  osType: Linux
+  ipAddress:
+    type: Public
+    ports:
+    - protocol: tcp
+      port: 80
+tags: null
+type: Microsoft.ContainerInstance/containerGroups
+
+azure cloud shell - powershell
+upload deployment.yaml
+
+az container create --resource-group demogrp1 --file deployment.yaml
+test public ip 
+
+----------
+Azure Container Intances - Container Groups - Container registry
+vs 
+ Program.cs
+  create blob
+   memory stream - enter the string into blob
+
+run program
+
+azure portal - storage account
+container
+
+donet publish
+
+WinSCP
+copy Dockerfile to linux machine
+copy files from folder publish
+
+Dockerfile
+FROM mcr.microsoft.com/donet/core/sdk:3.1
+WORKDIR /app
+COPY . .
+ENTRYPOINT["donet", "blobproject.dll"]
+
+Container registry
+  access key 
+    -Adminuser: enable 
+
+linux vm
+ docker, azure cli
+sudo az login
+sudo az acr login --name demoregistry3000
+sudo docker build -t donetapp .
+sudo docker tag dotnetapp demoregistry3000.azurecr.io/dotnetapp
+sudo docker push demoregistry3000.azurecr.io/dotnetapp
+
+Container registry
+  repositories
+
+
+apiVersion: 2018-10-01
+location: eastus
+name: mycontainer
+properties:
+  containers:
+  - name: dotnetapp
+    properties:
+      image: demoregistry3000.azurecr.io/dotnetapp
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+  osType: Linux
+  imageRegistryCredentials:
+    - server: demoregistry3000.azurecr.io
+      username: demoregistry3000
+      password: RP+e8rd6ZDGMK2cKZODtFhNtM8jFm8im
+tags: null
+type: Microsoft.ContainerInstance/containerGroups
+
+
+azure cloud shell - powershell
+upload deployment.yaml
+ls
+az container create --resource-group demogrp1 --file deployment.yaml
+
+//this file has been created out of the container, which is running in the container instance
+
