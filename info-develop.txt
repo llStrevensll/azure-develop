@@ -1431,3 +1431,374 @@ az container create --resource-group demogrp1 --file deployment.yaml
 
 //this file has been created out of the container, which is running in the container instance
 
+--------
+Azure Container Instances - Secrets
+storage account 
+    - keys-connection string
+
+encode connection string
+powershell
+$value= "DefaultEndpointsProtocol=https;AccountName=demostore40000;AccountKey=oKSUsm+5HsyIVxORQAZoWqYvxOVR81F3ZCowrNe/gUvVl409q8E2TMQtZlycuN9fI/OxVBu/qKDhNNSQd09LZw==;EndpointSuffix=core.windows.net"
+$Bytes = [System.Text.Encoding]::UTF8.GetBytes($value)
+$Base64 = [Convert]::ToBase64String($Bytes)
+Write-Host $Base64
+
+vs
+string mountpath = "/mounts/secrets";
+            
+// Will get the directory - volumesecret
+var folders = Directory.GetDirectories(mountpath);
+foreach(var folder in folders)
+{
+     Console.WriteLine($"Folder : {folder.ToString()}");
+     var AllFiles = Directory.GetFiles(folder);
+     foreach(var file in AllFiles)
+     {
+           storageconnstring = File.ReadAllText(file);
+           Console.WriteLine(storageconnstring);
+     }                   
+}
+ donet publish
+
+copy files to vm from folder publish
+
+sudo docker rm --force <id>
+sudo docker build -t dotnetapp .
+sudo docker tag dotnetapp demoregistry3000.azurecr.io/donetapp
+sudo docker push demoregistry3000.azurecr.io/donetapp
+
+rm deployment.yml
+upload file
+
+deployment.yml
+apiVersion: '2018-10-01'
+location: eastus
+name: mycontainernew
+properties:
+  containers:
+  - name: dotnetappnew
+    properties:
+      image: demoregistry3000.azurecr.io/dotnetapp
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+      volumeMounts:
+      - mountPath: /mounts/secrets
+        name: volumesecret
+  osType: Linux
+  imageRegistryCredentials:
+    - server: demoregistry3000.azurecr.io
+      username: demoregistry3000
+      password: RP+e8rd6ZDGMK2cKZODtFhNtM8jFm8im
+  volumes:
+  - name: volumesecret
+    secret:
+      storage-connection: RGVmYXVsdEVuZHBvaW50c1Byb3RvY29sPWh0dHBzO0FjY291bnROYW1lPWRlbW9zdG9yZTQwMDAwO0FjY291bnRLZXk9b0tTVXNtKzVIc3lJVnhPUlFBWm9XcVl2eE9WUjgxRjNaQ293ck5lL2dVdlZsNDA5cThFMlRNUXRabHljdU45ZkkvT3hWQnUvcUtEaE5OU1FkMDlMWnc9PTtFbmRwb2ludFN1ZmZpeD1jb3JlLndpbmRvd3MubmV0
+tags: null
+type: Microsoft.ContainerInstance/containerGroups
+
+Container intances
+  Containers
+      logs
+
+
+====================
+Cosmos DB
+Database account, Database, Container  , Item
+-----------------------------------------------
+SQL API		  Database, Container  , Document
+Table API	  NA	  , Table      , Item
+MongoDB API	  Database, Collection ,  Document
+Cassandra API     Keyspace, Table      , Row
+Gremlim API       Database, Graph      , Node or edge
+
+Create Cosmos DB
+Subscription
+ resource group
+
+Account name
+API Core(SQL)
+Apply free Tier Discount
+
+----
+azure cosmos db account
+Data Explorer
+ Add Container
+   database id: appdb
+   throughput 
+   container id: customer
+   partition key: /city
+
+//full screen
+new item
+{
+  "customerid": 1,
+  "customername": "Strevens",
+  "city":  "Bogota"
+}
+
+{
+  "customerid": 1,
+  "customername" : "Jane",
+  "city" : "Miami"
+}
+
+
+{
+  "customerid": 2,
+  "customername" : "Jun",
+  "city" : "New York"
+}
+
+
+{
+  "customerid": 3,
+  "customername" : "Mika",
+  "city" : "Florida"
+}
+
+
+{
+  "customerid": 4,
+  "customername" : "Leo",
+  "city" : "New York"
+}
+
+sql query
+select * from c where c.city="New York"
+
+select * from c where c.customername="Mika"
+
+
+----
+id property, generate with azure portal
+
+generate the ID yourself
+{
+  "id": 5,
+  "customername" : "Luke",
+  "city" : "Miami"
+}
+----
+Your RU's get split across the partitions
+miami, newyork, florida
+200     200      200    -  RU:600
+
+----
+vs
+Tools
+  Nuget Package Manger
+    Manage Nuget Package for Solution
+      Microsoft.Azure.Cosmos  3.8.0
+
+customer.cs
+   map onto the items that i'm storing in container
+program.cs
+//CreateNewItem().wait();
+//ReadItem().wait();
+//ReplaceItem().wait();
+//DeleteItem().wait();
+
+
+azure cosmos db account
+keys
+  URI - endpoint
+  PRIMARY OR SECONDARY KEY - key
+
+---------
+embedding data
+
+{
+  "customerid": 1,
+  "customername" : "John",
+  "city" : "Miami"
+}
+
+
+{
+  "customerid": 2,
+  "customername" : "Jane",
+  "city" : "New York",
+  "orders" :[
+  {
+	"orderid" : 1000,
+	"productid" : 100,
+	"quantity" : 2
+  }]
+}
+
+
+{
+  "customerid": 3,
+  "customername" : "Michael",
+  "city" : "Florida",
+  "orders" :[
+  {
+	"orderid" : 1001,
+	"productid" : 200,
+	"quantity" : 2
+  }]
+
+}
+
+
+{
+  "customerid": 4,
+  "customername" : "David",
+  "city" : "New York"
+}
+
+select * from customer.orders c
+select * from c in customer.orders where c.orderid=1000
+select count(c) from c in customer.orders
+
+----
+vs 
+CreateNewItem().Wait();
+ReadItem().Wait();
+run
+
+---
+referencing data
+---
+Change Feed - The listen to all changes in a container and outputs a stored
+list of documents that changed in the order in which the were modified
+
+azure function 
+  cosmos db trigger
+     NewFunction: apptrigger
+     Cosmos DB account connection:
+             new - database account
+     Database name: appdb
+     Collection name: customer
+ 
+   
+code + test:
+
+#r "Microsoft.Azure.DocumentDB.Core"
+using System;
+using System.Collections.Generic;
+using Microsoft.Azure.Documents;
+
+public static void Run(IReadOnlyList<Document> input, ILogger log)
+{
+    if (input != null && input.Count > 0)
+    {
+        log.LogInformation("Documents modified " + input.Count);
+                foreach(var customer_obj in input )
+                {
+                       int customer_id=customer_obj.GetPropertyValue<int>("customerid") ;
+                       string customer_name=customer_obj.GetPropertyValue<string>("customername") ;
+                       string customer_city=customer_obj.GetPropertyValue<string>("city") ;
+
+                       log.LogInformation($"The customer id is {customer_id}");
+                       log.LogInformation($"The customer name is {customer_name}");
+                       log.LogInformation($"The customer city is {customer_city}");
+                }
+    }
+}
+
+
+add new item in cosmosdb
+{
+  "":3
+  "":"",
+  "":""
+}
+
+log in azure function
+
+--------
+create new stored procedure
+
+stored procesure id : demo
+store procedure body: (is in javascript)
+
+function Sample() {
+        var context = getContext();
+        var response = context.getResponse();
+        response.setBody("Executing a Stored Procedure");
+}
+
+run vs
+
+--
+stored procesure id : demo
+store procedure body: CreateItem
+function AddItem(p_document) {
+
+    var context = getContext();
+    var container = context.getCollection();
+
+    var accepted = container.createDocument(container.getSelfLink(),
+        p_document,
+        function (err, item) {
+            if (err) throw new Error('Error' + err.message);
+            context.getResponse().setBody(item.id)
+        });
+    if (!accepted) return;
+}
+
+run vs
+
+-------------
+triggers
+create a new trigger
+Trigger Id: AppendDocument
+Trigger Type: Pre
+Trigger Operation: Aññ
+Trigger Body:
+function Append(){
+	var context=getContext();
+	var request=context.getRequest();
+	var document=request.getBody();
+
+	document["orders"]=0;
+	request.setBody(document);
+}
+========================
+Cosmos DB Local Emulator
+https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator-release-notes
+--
+time to live
+settings - on
+
+"ttl": 1000
+--
+indexing
+settings
+  index policy
+
+{
+    "indexingMode": "consistent",
+    "automatic": true,
+    "includedPaths": [
+        {
+            "path": "/*"
+        }
+    ],
+    "excludedPaths": [
+        {
+            "path": "/\"_etag\"/?"
+        }
+    ],
+    "compositeIndexes": [
+        [
+            {
+                "path": "/city",
+                "order": "ascending"
+            },
+            {
+                "path": "/customername",
+                "order": "ascending"
+            }
+        ]
+    ]
+}
+
+SELECT * FROM c order by c.city, c.customername asc
+
+---
+diagnostic data
+ Query Stats9999999
