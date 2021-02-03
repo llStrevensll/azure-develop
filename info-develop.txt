@@ -1801,4 +1801,55 @@ SELECT * FROM c order by c.city, c.customername asc
 
 ---
 diagnostic data
- Query Stats9999999
+ Query Stats
+
+vs
+jvalue  - Newtonsoft.Json
+run
+-----
+cosmosdb
+replicate data globally
+ save
+
+vs run
+
+----
+Consistency levels
+azure cosmos db
+default consistency
+
+1) Strong - Here the reads will be guaranteed to give the most recent committed version of an item. 
+Where can you see a use case of this. Let's say you have an application used by a hospital. 
+Let' say that the hospital has multiple locations. 
+If the hospital always to get the latest version always for a patient's records at any point in time, 
+they might need Strong consistency. Since this is critical , it is important to always have the most recent information.
+
+2) Bounded staleness - Here the reads can lag behind the writes by at most "K" versions of an item or by "T" time interval.
+
+3) Session - This guarantees consistency within a particular session
+
+4) Consistent prefix - Here the client will never see an out of order write
+
+5) Eventual - This is the least form of consistency wherein the client will not be guaranteed on the order of the writes
+
+---------
+cli azure cosmos db
+create a new Cosmos DB account
+az cosmosdb create -n newaccount6000 -g demogrp1 --default-consistency-level Session --locations regionName='West US 2' failoverPriority=0 isZoneRedundant=False
+
+create an Azure Cosmos DB account with multiple regions
+az cosmosdb create -n newaccount5000 -g demogrp1 --default-consistency-level Session --locations regionName='West US 2' failoverPriority=0 isZoneRedundant=False --locations regionName='East US 2' failoverPriority=1 isZoneRedundant=False
+
+create an Azure Cosmos DB account with the Table API
+az cosmosdb create -n newaccount6000 -g demogrp1 --default-consistency-level Session --locations regionName='West US 2' failoverPriority=0 isZoneRedundant=False --capabilities EnableTable
+---------
+azure cosmos db -table api
+api: Azure Table
+
+vs run
+use connection string
+
+NewItem().Wait();
+ReadItem().Wait();
+UpdateItem().Wait();
+DeleteItem().Wait();
