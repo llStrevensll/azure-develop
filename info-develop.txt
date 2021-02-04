@@ -1853,3 +1853,69 @@ NewItem().Wait();
 ReadItem().Wait();
 UpdateItem().Wait();
 DeleteItem().Wait();
+
+====================================
+====================================
+Azure Security
+Azure AD
+
+Azure Portal
+Azure Directory
+  Users
+
+create user
+
+ Groups
+   Collection of user -- access
+
+--
+Role Based Access Control
+
+Owner: Grants full access to manage all resources, including the ability to assign roles in Azure RBAC.
+Contributor: Grants full access to manage all resources, but does not allow you to assign roles in Azure RBAC, manage assignments in Azure Blueprints, or share image galleries.
+Reader: View all resources, but does not allow you to make any changes
+
+----
+vm
+Acces Control (IAM) 
+  Role assigment
+    Add role assignment
+      Role: Reader
+      Assign  access to: Azure AD
+      Select: user
+
+login with user
+vm
+ Networking "You do not have read permission for this network interface"
+
+
+Resource Group
+Acces Control (IAM) 
+  Role assigment
+    Add role assignment
+      Role: Reader
+      Assign  access to: Azure AD
+      Select: user
+
+Public IP Address
+Access Control (IAM)
+  Role assigment
+     the user have permission
+
+-----
+OAuth and OpenID Connect
+
+username
+password
+
+security token
+
+ProductsAPI
+OrdersAPI
+CustomerAPI
+
+Azure AD
+User
+
+----
+OAuth2.0 Implicit Flow
