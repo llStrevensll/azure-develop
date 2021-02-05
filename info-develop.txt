@@ -2090,3 +2090,66 @@ Access polices
  add access policy
  select principal
     user
+
+------
+Azure VM Disk Encryption
+key vault
+Access polices
+  check - Azure Disk Encryption for volume encryption
+
+azure cloud shell - powershell
+
+az vm encryption enable -g testgrp --name newvm --disk-encryption-keyvault demovault9090
+
+-------
+key vault - Invoking via API calls
+
+azure ad registration
+  register an application_ postman
+  http://localhost
+
+api permissions
+  add azure key vault
+     user_impersonation
+
+Authentication
+  Access tokens
+
+Certificates & secrets
+  add secret
+
+Postman
+  Post  https://login.microsoftonline.com/<tenent ID>/oauth2/token
+  Body
+    key                 value
+    grant_type          client_credentials
+    client_id           <clientid>
+    client_secret       <value>
+
+   resource             https://vault.azure.net
+
+send
+
+copy token
+---
+key vault
+  secret
+    copy - <Secret Identifier>  https://demovault8000.vault.azure.ner/secret...
+      
+add access policy
+  secret permission
+     get, list
+  select principal
+     postman
+
+
+   GET  <Secret Identifier>
+   Headers
+      key                 Value
+      Authorization       Bearer <paste token>
+
+send
+---
+Manged Service Identity
+ key vault
+ azure web app
