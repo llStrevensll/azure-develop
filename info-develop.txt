@@ -2153,3 +2153,320 @@ send
 Manged Service Identity
  key vault
  azure web app
+=====================================
+=====================================
+Monitor
+  Metrics
+    Select Subscriptions
+        Resource Type - Virtual Machine
+Activity log
+Alerts
+  Create rule
+    Resource - vm
+    Condition - Signal type: Activity log
+                  all administrative operations
+    Action Groups - resource group
+                   email
+
+stop vm
+you recieve a email
+---
+vm - Properties
+      Resource ID: /subscriptions/20c6eec9-2d80-.....
+
+azure cli
+az monitor metrics alert create -n demoalert -g demogrp1 --scopes /subscriptions/20c6eec9-2d80-4700-b0f6-4fde579a8783/resourceGroups/demogrp1/providers/Microsoft.Compute/virtualMachines/linuxvm 
+--condition "avg Percentage CPU > 80" --window-size 5m --evaluation-frequency 1m --description "High CPU"
+
+--------------
+Auto Scaling - Azure WebApp
+//App service plan
+
+scale out
+custom scale
+  add rule
+
+
+scale out
+manual scale
+ instance count
+
+scale out
+custom scale
+  add rule
+     metric storage queue
+
+---
+Application Insights
+
+sql database
+ query editor
+  CREATE TABLE Products (
+    Id int NOT NULL IDENTITY,
+    Name varchar(255) NOT NULL,
+    price real,
+    PRIMARY KEY (Id)
+  );
+
+
+
+insert into Products(Name,price) values('ProductA',40.99);
+
+insert into Products(Name,price) values('ProductB',50.99);
+
+insert into Products(Name,price) values('ProductC',60.99);
+
+drop table Products;
+vs run local
+
+
+create web app
+enable application insights
+
+---
+vs
+Project
+ Add Application insights Telemetry..
+   Subscription
+   Resource: existing resource- appinsight
+
+run vs
+
+--
+View - Other Windows
+           Application Insights Search
+              Search debug session telematry
+
+publish solution
+
+---------
+application insghts
+live metrics
+performance
+
+  end-to-end transaction
+
+-------
+funnels
+users flows
+retention
+-----
+Availability
+  Create test
+    ping request
+    url - webapp
+
+------
+traking user id
+Application Insights
+
+
+Overview
+
+This is an application Performance Management service for web developers.
+You can use this tool to monitor your applications.
+It can help developers detect anomalies in the application.
+It can help diagnose issues.
+It can also help understand how users use your application.
+It also helps you improve performance and usability of your application.
+
+  *Different aspects that get monitored with Application Insights
+
+Request rates, the response times and failure rates – This is done at the page level.
+Exception recorded by your application.
+Page views and their load performance as reported from the user’s browser.
+User and session counts.
+Performance counters of the underlying Windows or Linux Machines.
+Diagnostic trace logs from your application.
+Any custom events or metrics that the developer writes themselves in the code
+
+   *Different ways to see how your site is behaving
+
+ -Funnels
+
+You can create a funnel from one stage to another stage of your application.
+You can then see how users are progressing through the stages of the funnel.
+
+ -User Flows
+
+This helps visualize how users navigate between pages in your site. This can help answer question such as
+Does the user navigate away from a page on your site
+What do users click on a page on your site
+Where are the places where users churn most on your site
+Are there places where users repeat the same action over and over
+
+ -Impact
+
+This helps decide if a page is having an impact on your application.
+It can help answer the question as to whether the page load time is impacting how many people convert on a page in the application.
+
+ -Retention
+
+This helps you understand how many users return to your application.
+It can also help understand if users are able to perform certain tasks in your application.
+
+ -Usage and estimation costs
+If you go to your application insights resource and go to Usage and estimated costs, 
+you will see your usage and estimated costs for using application insights
+If you go onto Data retention, you can decide for how long you want to retain the data collected by Application Insights. The maximum retention period is 730 days
+------------------------------------------
+------------------------------------------
+Azure Chache for Redis
+create
+console
+---
+vs
+nuget package
+Microsoft.Extensions.Caching.Redis
+Microsoft.Extensions.Caching.Core
+
+run
+
+azure portal  - redis
+console
+
+>SCAN 0 COUNT 10
+
+1) "0"
+2) 1) "Count"
+   2)  "masterProducts"
+
+>HGETALL masterProducts
+1)"data"
+2) "[{}]"
+3) "sldexp"
+4) "-1"
+5) "absexp"
+6) "-1"
+
+---
+DEL masterProducts
+SCAN 0 COUNT 10
+
+
+
+------
+StackExhange.Redis
+
+---
+vs publish web app
+Azure Content Delivery Network
+
+CDN
+CDN Profile
+
+endpoint - test url
+
+application insights - availability
+add test  (create 2 test with diferent locations)
+  type: ping url test
+  frecuency: 5minutes
+  location: 
+  
+   type: ping url test
+  frecuency: 5minutes
+  location: 
+
+
+----
+endpoint
+  caching rules
+
+-------
+Bpass caching for query strings
+Cache every unique URL
+ignore query strings
+
+Caching rules
+ Query string caching behavior
+
+-----
+Azure Front Door Service
+This is a routing service that helps accelerate your application performance by
+routing traffic bassed on performance of your endpoints.
+
+backend pool
+weightage
+priority
+
+
+---
+create web app
+vs publish web app
+
+edit 
+
+vs publish other web app
+
+create front door
+ add a frontend host:company
+
+ add a backend pool   //add 2 backend
+    app service
+     backend host name          //endpoint
+      priority
+       weight
+
+
+ add Routing rules
+    HTTP only
+
+
+test url
+
+stop app service
+
+view redirect to second web app
+
+
+----------
+Azure Front Door Caching and Compression
+By default, Azure Front Door has the capability to deliver large files. If a file is large, it splits the file into chunks of 8 MB. 
+If the file is not in the cache, the large file is retrieved from the origin. Once the first 8 MB chunk is received , 
+it is sent to the user and then in parallel , the next 8 MB chunk is retrieved from the origin.
+
+Azure Front Door also supports compression. It supports all of the following MIME types. But the file needs to be in size between 1 KB and 8 MB. 
+It supports both gzip and Brotli compression.
+
+"application/eot"
+"application/font"
+"application/font-sfnt"
+"application/javascript"
+"application/json"
+"application/opentype"
+"application/otf"
+"application/pkcs7-mime"
+"application/truetype"
+"application/ttf",
+"application/vnd.ms-fontobject"
+"application/xhtml+xml"
+"application/xml"
+"application/xml+rss"
+"application/x-font-opentype"
+"application/x-font-truetype"
+"application/x-font-ttf"
+"application/x-httpd-cgi"
+"application/x-mpegurl"
+"application/x-opentype"
+"application/x-otf"
+"application/x-perl"
+"application/x-ttf"
+"application/x-javascript"
+"font/eot"
+"font/ttf"
+"font/otf"
+"font/opentype"
+"image/svg+xml"
+"text/css"
+"text/csv"
+"text/html"
+"text/javascript"
+"text/js", "text/plain"
+"text/richtext"
+"text/tab-separated-values"
+"text/xml"
+"text/x-script"
+"text/x-component"
+"text/x-java-source"
+
+Transient faults
