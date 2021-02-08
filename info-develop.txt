@@ -2667,5 +2667,134 @@ az servicebus topic create --resource-group $resourcegrp --namespace-name $names
 // You can use the following command to create a service bus subscription
 az servicebus topic subscription create --resource-group $resourcegrp --namespace-name $namespace --topic-name $topicname --name $subscriptionName
 
+============
+Azure Event Grid - Azure Function
+---
+Azure Event Grid Schema
+--
+service bus handler
+az eventgrid event-subscription create --name queue-subscription --source-resource-id /subscriptions/20c6eec9-2d80-4700-b0f6-4fde579a8783/resourceGroups/demogrp1/providers/Microsoft.Storage/storageAccounts/demostore4000 --endpoint-type servicebusqueue --endpoint /subscriptions/20c6eec9-2d80-4700-b0f6-4fde579a8783/resourceGroups/demogrp1/providers/Microsoft.ServiceBus/namespaces/appnamespace4000/queues/appqueue
+
+..
+webhook 
+
+----
+- function as webhook
+---
+custom topics
+
+---------
+---------
+Azure Events Hubs
+create  event hubs
+
+..net programs
+send messages event hub
+recieve messages event hub
+
+nuget package
+ Azure.Messaging.EventHubs
+
+Shared access polices
+----
+partitions
+  reader, 
+
+--
+readinf from an Offset
+
+-------------------
+--------------------
+Azure API Managament
+create SQL Database
+CREATE TABLE Courses (
+    Id int NOT NULL,
+    Name varchar(255) NOT NULL,
+    rating int,
+    PRIMARY KEY (Id)
+);
+
+insert into Courses(Id,Name,rating) values(1,'AZ-900',4);
+
+insert into Courses(Id,Name,rating) values(2,'AZ-204',5);
+
+insert into Courses(Id,Name,rating) values(3,'AZ-500',6);
+
+drop table Courses;
+
+
+
+vs publish web app
+
+postman
+POST https://demoapi7000.azurewebsites.net/api/Courses
+Body   
+   raw   JSON
+  {"id":4,"Name":"az-204","rating":5}
+
+
 ------
-Azure Event Grid
+create api management
+
+Create a blank API
+  Displayname
+  web service URL
+  Base URL
+
+Add operation
+  Name: Get all courses
+  URL GET /Courses
+
+  test
+
+GET
+send
+--
+Postman
+GET https://demoapi200.azure-api-net/Courses
+key				Value
+Ocp-Apim-Subscription-Key	80e23.....
+
+Add operation
+  Name: Get-a-course
+  URL GET /Courses/{id}
+
+Add operation
+  Name: add-a-course
+  URL POST  /api/Courses
+
+---
+API Mangement policies
+
+select operation
+  Inbound processing
+  Outbound processing
+    polices code editor
+ 
+
+---
+Rewrite URL's
+<policies>
+    <inbound>
+        <base />
+        <rewrite-uri template="@{
+        return "/api/Courses"; }" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
+----
+    <inbound>
+        <base />
+        <set-variable name="CourseId" value="1" />
+        <rewrite-uri template="@{
+        return "/api/Courses/"+ context.Variables.GetValueOrDefault<string>("CourseId"); }" />
+    </inbound>
+
