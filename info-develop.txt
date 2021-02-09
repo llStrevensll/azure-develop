@@ -2797,4 +2797,115 @@ Rewrite URL's
         <rewrite-uri template="@{
         return "/api/Courses/"+ context.Variables.GetValueOrDefault<string>("CourseId"); }" />
     </inbound>
+----
+Conditions
+
+    <inbound>
+        <base />
+        <set-variable name="Total" value="@(context.Request.Headers["total"][0])" />
+        <choose>
+            <when condition="@(int.Parse(context.Variables.GetValueorDefault<string>("Total"))<10">
+		<rewrite-uri template="@{return "/api/Courses";}" />
+	    </when>
+	    <otherwise>
+                <rewrite-uri template="@{return "/Home/Details/1";}"  />
+		<set-backend-service base-url="https://demostaging4000.azurewebsites.net"/>
+            </otherwise>
+	</choose>
+    </inbound>
+-----
+Outbound Rule
+<policies>
+    <inbound>
+        <base />
+        <rewrite-uri template="@{
+        return "/api/Courses"; }" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+ <choose>
+      <when condition="@(context.Response.StatusCode == 200)">
+        <set-body>
+          @{
+          return "Error";
+           }               
+    </set-body>
+      </when>
+    </choose>
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
+
+----
+OpenAPI Specification
+nuget package
+ Swashbuckle.AspNetCore
+
+----
+powershell
+
+PowerShell commands that can be used to work with the API Management instance
+
+// 1. Here we are setting PowerShell variables.
+// This is the name we want to give to the API 
+$appservicename = "core-management"
+
+// Here we mention an existing resource group
+$resourceGroupName = "demogrp1"
+
+// Here we specify the location in which we want to create our API Management Instance
+$location = "East US"
+
+// Here we specify the organization name
+$organisation = "CompanyA"
+
+// Here we specify the organization email
+$adminEmail = "admin@company.com"
+
+// Here we are assuming that our API is using the Open API Specification
+$Url="https://corewebapi4000.azurewebsites.net/swagger/v1/swagger.json"
+
+// Here we are giving the location of an Azure Web App that is hosting our API
+$webapi="https://corewebapi4000.azurewebsites.net"
+
+// The below PowerShell command can be used to create a new API Management Instance
+New-AzApiManagement -ResourceGroupName $resourceGroupName -Name $appservicename -Location $location -Organization $organisation -AdminEmail $adminEmail
+
+// After we create the Azure API Management Instance, we then need to set the context
+$context = New-AzApiManagementContext -ResourceGroupName $resourceGroupName -ServiceName $appservicename
+
+// We can then import an API using our web api
+$api = Import-AzApiManagementApi -Context $context -SpecificationUrl $Url -SpecificationFormat "OpenApi" -ServiceUrl $webapi
+
+------------------
+Azure Logic Apps
+
+create container in storage account
+
+create logic app
+
+Blank logic app
+  azure event grid 
+     event type - Actionsuccess, Writesuccess, DeleteSuccess
+  azure blob storage
+     Blob name  - ID
+     Blob content - EventType, Subject, Topic
+
+
+ -------
+with event grid
+--------
+azure functions
+
+--------
+azure blob storage
+
+Connectors for Azure Logic Apps
+https://docs.microsoft.com/en-us/azure/connectors/apis-list
+         
 
