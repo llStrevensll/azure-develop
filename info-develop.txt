@@ -2919,3 +2919,5 @@ Azure Web app log
 
 az webapp log config
 
+  [--docker-container-logging {filesystem, off}]
+
