@@ -2909,3 +2909,13 @@ Connectors for Azure Logic Apps
 https://docs.microsoft.com/en-us/azure/connectors/apis-list
          
 
+
+
+
+====================
+====================
+Azure Web app log
+ https://docs.microsoft.com/en-us/cli/azure/webapp/log?view=azure-cli-latest
+
+az webapp log config
+
